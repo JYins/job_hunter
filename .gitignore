@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.pyo
+*.pyd
+*.log
+data/processed/*.csv
+data/processed/*.xlsx
+data/raw/jobspy/*.jsonl
+data/raw/alerts/*.jsonl
+!data/raw/alerts/links_today.txt

@@ -1,0 +1,6 @@
+pandas
+openpyxl
+python-jobspy
+pyyaml
+sentence-transformers
+torch

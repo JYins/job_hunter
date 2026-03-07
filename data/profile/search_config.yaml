@@ -1,0 +1,32 @@
+locations:
+  - Toronto
+  - Waterloo
+  - Vancouver
+  - Montreal
+  - Calgary
+  - Remote Canada
+
+job_types:
+  - intern
+  - internship
+  - co-op
+  - coop
+  - new grad
+
+keywords:
+  - robotics
+  - software engineer
+  - machine learning
+  - autonomy
+  - perception
+  - embedded
+  - computer vision
+  - python
+  - c++
+
+exclude:
+  - senior
+  - staff
+  - principal
+  - manager
+  - 5+ years

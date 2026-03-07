@@ -1,0 +1,17 @@
+weights:
+  rule: 0.40
+  keyword: 0.20
+  semantic: 0.20
+  freshness: 0.10
+  company: 0.10
+
+tiers:
+  a_min: 0.75
+  b_min: 0.55
+
+semantic:
+  enabled: true
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+
+dedupe:
+  title_similarity_threshold: 0.92

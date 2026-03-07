@@ -1,0 +1,22 @@
+jobspy:
+  enabled: true
+  sites:
+    - indeed
+    - google
+  search_terms:
+    - robotics intern canada
+    - software engineer intern canada
+    - machine learning intern canada
+  locations:
+    - Toronto, ON
+    - Waterloo, ON
+    - Vancouver, BC
+    - Montreal, QC
+    - Remote, Canada
+  days_back: 7
+  results_wanted: 100
+  country_indeed: canada
+
+manual_links:
+  enabled: true
+  path: data/raw/alerts/links_today.txt
