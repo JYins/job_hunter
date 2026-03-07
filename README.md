@@ -1,19 +1,19 @@
-# Job Hunter V1: 我的加拿大实习找工工作流
+# Job Hunter V1: My Canada Intern/Co-op Workflow
 
-这是一个给“我自己找 intern/co-op”用的日更流水线。  
-目标很简单：每天把最值得投的岗位先排出来，少刷无效岗位，多做高价值申请动作。
+This is my personal daily pipeline for finding better intern/co-op roles in Canada.
+The goal is simple: spend less time doom-scrolling job boards, and more time applying to high-fit roles.
 
-这套流程会做 6 件事：
-1. JobSpy 抓岗位
-2. 读手动粘贴的 alert 链接
-3. 标准化数据结构
-4. 去重
-5. 打分 + 分层（A/B/C）
-6. 导出今天该看的 Excel
+It does six things:
+1. Fetches jobs from JobSpy
+2. Ingests manually pasted alert links
+3. Normalizes records into one schema
+4. Deduplicates jobs
+5. Scores and tiers jobs (A/B/C)
+6. Exports a daily Excel report
 
 ---
 
-## 快速开始
+## Quick Start
 
 ```bash
 python -m venv .venv
@@ -24,20 +24,20 @@ python scripts/run_daily.py
 
 ---
 
-## 你每天只需要做什么
+## What I Do Every Day
 
-1. 把邮件里的新岗位链接贴到 `data/raw/alerts/links_today.txt`（一行一个链接）
-2. 跑一次：
+1. Paste new job links from email alerts into `data/raw/alerts/links_today.txt` (one URL per line).
+2. Run:
 
 ```bash
 python scripts/run_daily.py
 ```
 
-3. 打开 `data/processed/today_top_jobs.xlsx`，优先看 Top 20 和 A 类岗位
+3. Open `data/processed/today_top_jobs.xlsx` and prioritize Top 20 + Tier A roles.
 
 ---
 
-## 核心输入配置（先改这些）
+## Core Inputs to Configure
 
 - `data/profile/user_profile.md`
 - `data/profile/skills_master.yaml`
@@ -46,13 +46,13 @@ python scripts/run_daily.py
 - `config/sources.yaml`
 - `config/scoring_config.yaml`
 
-这些文件决定了“什么岗位算适合我”。
+These files define what "good fit" means for me.
 
 ---
 
-## 打分怎么做（重点）
+## Scoring Model (with NLP)
 
-最终分数：
+Final score:
 
 ```text
 final_score = 0.40 * rule
@@ -62,59 +62,61 @@ final_score = 0.40 * rule
             + 0.10 * company
 ```
 
-### 1) Rule Score（硬规则，40%）
+### 1) Rule Score (40%)
 
-看岗位是否满足基础门槛：
-- 是否 intern/co-op/new grad 导向
-- 是否在加拿大目标范围（城市或 Remote Canada）
-- 是否命中 senior/staff/principal 等排除词
+Hard filters and intent checks:
+- intern/co-op/new grad signal
+- Canada location signal (city matches or Remote Canada)
+- seniority exclusions (senior/staff/principal/etc.)
 
-### 2) Keyword Score（关键词匹配，20%）
+### 2) Keyword Score (20%)
 
-把岗位文本和你的技能词典做交集：
-- 来自 `search_config.yaml` 的关键词
-- 来自 `skills_master.yaml` 的技能项
+Keyword overlap between the job text and:
+- `search_config.yaml` role keywords
+- `skills_master.yaml` skill inventory
 
-匹配越多，分越高。
+More overlap means a higher score.
 
-### 3) Semantic Score（NLP 语义匹配，20%）
+### 3) Semantic Score (NLP, 20%)
 
-这里用 `sentence-transformers/all-MiniLM-L6-v2`。  
-流程是：
-- 把 `user_profile.md` + 技能摘要拼成“个人画像文本”
-- 把每个岗位的 `title + description` 作为岗位文本
-- 生成向量后做余弦相似度（cosine similarity）
-- 再把相似度映射到 0~1 分数区间
+Uses `sentence-transformers/all-MiniLM-L6-v2`.
 
-这个分的意义是：  
-岗位没写出完全一样的关键词，也能识别“语义上很接近”的职位。
+Pipeline:
+1. Build a profile text from `user_profile.md` + structured skills.
+2. Build a job text from `title + description`.
+3. Encode both into embeddings.
+4. Compute cosine similarity.
+5. Map similarity to a stable `0..1` score.
 
-运行策略：
-- 默认 CPU
-- 如果检测到 CUDA，会自动用 GPU
-- 模型加载失败时，语义分回退到 0（流水线不断）
+Why this matters:
+- Keyword matching misses good roles with different wording.
+- Semantic matching catches jobs that are conceptually aligned, even when exact terms differ.
 
-### 4) Freshness Score（新鲜度，10%）
+Runtime behavior:
+- CPU by default
+- Auto-uses CUDA when available
+- If model load fails, semantic score gracefully falls back to `0` (pipeline still runs)
 
-岗位越新，分越高。  
-刚发布的岗位优先级更高，防止“晚投”。
+### 4) Freshness Score (10%)
 
-### 5) Company Score（目标公司加权，10%）
+Newer jobs get higher scores so I can apply earlier.
 
-来自 `target_companies.yaml` 的分层：
-- tier_a 最高加分
-- tier_b 次之
-- tier_c 轻度加分
+### 5) Company Score (10%)
+
+Boosts roles from preferred companies in `target_companies.yaml`:
+- `tier_a`: strongest boost
+- `tier_b`: medium boost
+- `tier_c`: light boost
 
 ---
 
-## 输出文件
+## Outputs
 
-- 主数据：`data/processed/jobs_master.csv`
-- 每日看板：`data/processed/today_top_jobs.xlsx`
-- 运行日志：`logs/run_YYYYMMDD.log`
+- Canonical dataset: `data/processed/jobs_master.csv`
+- Daily report: `data/processed/today_top_jobs.xlsx`
+- Logs: `logs/run_YYYYMMDD.log`
 
-Excel 里会有：
+Excel sheets:
 - `top_20`
 - `all_scored`
 - `source_summary`
@@ -122,19 +124,21 @@ Excel 里会有：
 
 ---
 
-## 测试
+## Tests
 
 ```bash
 pytest -q
 ```
 
-当前包含：
-- 1 个端到端 smoke test
-- 3 个单测（去重、打分分层、语义设备选择）
+Current coverage includes:
+- smoke test for end-to-end daily run
+- dedupe behavior
+- weighted scoring + tier thresholds
+- semantic runtime device fallback
 
 ---
 
-## 小备注
+## Note
 
-这是一个“帮我更稳定投递”的系统，不是“自动海投机器人”。  
-它负责筛和排优先级，我负责把高分岗位认真投出去。
+This is a prioritization workflow, not an auto-apply bot.
+The system filters and ranks jobs; I still do high-quality human applications.
