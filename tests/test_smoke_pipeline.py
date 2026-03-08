@@ -86,6 +86,9 @@ def test_smoke_run_daily_pipeline(tmp_path):
     assert report.exists()
     assert master.exists()
     assert log_path.exists()
+    log_text = log_path.read_text(encoding="utf-8")
+    assert "Source summary: fetched=" in log_text
+    assert "3-run acceptance gate" in log_text
 
     df = pd.read_csv(master)
     assert len(df) == 2

@@ -2,7 +2,26 @@ jobspy:
   enabled: true
   sites:
     - indeed
+    - linkedin
+    - glassdoor
+    - zip_recruiter
     - google
+  site_settings:
+    - name: indeed
+      enabled: true
+      priority: 1
+    - name: linkedin
+      enabled: true
+      priority: 2
+    - name: glassdoor
+      enabled: true
+      priority: 3
+    - name: zip_recruiter
+      enabled: true
+      priority: 4
+    - name: google
+      enabled: true
+      priority: 5
   search_terms:
     - robotics intern canada
     - software engineer intern canada
@@ -16,6 +35,10 @@ jobspy:
   days_back: 7
   results_wanted: 100
   country_indeed: canada
+  parallel_site_workers: 3
+  stop_after_consecutive_empty: 3
+  stop_after_consecutive_error: 2
+  min_attempts_before_pause: 10
 
 manual_links:
   enabled: true

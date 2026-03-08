@@ -118,6 +118,13 @@ def normalize_jobs(base_dir: str | Path | None = None, run_date: date | None = N
                 "final_score": 0.0,
                 "tier": "",
                 "recommended_resume": "",
+                "feedback_status": "new",
+                "feedback_updated_at": "",
+                "applied_at": "",
+                "replied_at": "",
+                "interview_at": "",
+                "rejected_at": "",
+                "feedback_notes": "",
             }
         )
 

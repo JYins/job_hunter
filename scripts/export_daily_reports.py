@@ -37,6 +37,8 @@ def export_daily_reports(base_dir: str | Path | None = None, run_date: date | No
         df["source"] = "unknown"
     if "tier" not in df.columns:
         df["tier"] = "C"
+    if "feedback_status" not in df.columns:
+        df["feedback_status"] = "new"
 
     df["final_score"] = pd.to_numeric(df["final_score"], errors="coerce").fillna(0.0)
     sorted_df = df.sort_values(by=["final_score", "date_found"], ascending=[False, False]).reset_index(drop=True)
@@ -49,10 +51,19 @@ def export_daily_reports(base_dir: str | Path | None = None, run_date: date | No
         .sort_values("job_count", ascending=False)
     )
     source_summary["avg_score"] = source_summary["avg_score"].round(4)
+    total_jobs = max(int(source_summary["job_count"].sum()), 1)
+    source_summary["contribution_pct"] = ((source_summary["job_count"] / total_jobs) * 100.0).round(2)
 
     tier_summary = (
         sorted_df.groupby("tier", dropna=False).agg(job_count=("job_id", "count")).reset_index().sort_values("tier")
     )
+    feedback_summary = (
+        sorted_df.groupby("feedback_status", dropna=False)
+        .agg(job_count=("job_id", "count"), avg_score=("final_score", "mean"))
+        .reset_index()
+        .sort_values("job_count", ascending=False)
+    )
+    feedback_summary["avg_score"] = feedback_summary["avg_score"].round(4)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
@@ -60,6 +71,7 @@ def export_daily_reports(base_dir: str | Path | None = None, run_date: date | No
         sorted_df.to_excel(writer, sheet_name="all_scored", index=False)
         source_summary.to_excel(writer, sheet_name="source_summary", index=False)
         tier_summary.to_excel(writer, sheet_name="tier_summary", index=False)
+        feedback_summary.to_excel(writer, sheet_name="feedback_summary", index=False)
 
     logger.info("Exported report with %s rows -> %s", len(sorted_df), output_path)
     return {"count": int(len(sorted_df)), "path": str(output_path)}

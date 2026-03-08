@@ -33,6 +33,13 @@ CANONICAL_COLUMNS = [
     "final_score",
     "tier",
     "recommended_resume",
+    "feedback_status",
+    "feedback_updated_at",
+    "applied_at",
+    "replied_at",
+    "interview_at",
+    "rejected_at",
+    "feedback_notes",
 ]
 
 

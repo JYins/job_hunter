@@ -35,6 +35,19 @@ python scripts/run_daily.py
 
 3. Open `data/processed/today_top_jobs.xlsx` and prioritize Top 20 + Tier A roles.
 
+### Feedback Tracking (Applied / Replied / Interview / Rejected)
+
+Use this to track application progress directly in `jobs_master.csv`:
+
+```bash
+python scripts/update_feedback.py --status applied --job-id <JOB_ID> --notes "submitted on company portal"
+python scripts/update_feedback.py --status replied --job-url https://example.com/job/123
+python scripts/update_feedback.py --status interview --contains-title "Software Intern"
+python scripts/update_feedback.py --status rejected --job-id <JOB_ID>
+```
+
+Feedback fields are exported to Excel and summarized in the `feedback_summary` sheet.
+
 ---
 
 ## Core Inputs to Configure
