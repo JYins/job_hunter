@@ -43,3 +43,14 @@ jobspy:
 manual_links:
   enabled: true
   path: data/raw/alerts/links_today.txt
+
+external_sources:
+  enabled: true
+  github_watch:
+    enabled: true
+    repos:
+      - reposnegarprh/Canadian-Tech-Internships-2026
+      - SimplifyJobs/Summer2026-Internships
+  internee:
+    enabled: true
+    url: https://internee.ca
