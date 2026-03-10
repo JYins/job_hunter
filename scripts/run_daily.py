@@ -13,6 +13,7 @@ try:
     from scripts.export_daily_reports import export_daily_reports
     from scripts.fetch_external_sources import fetch_external_sources
     from scripts.fetch_jobspy import fetch_jobspy_jobs
+    from scripts.fetch_uwo_connect import fetch_uwo_connect
     from scripts.ingest_manual_links import ingest_manual_links
     from scripts.normalize_jobs import normalize_jobs
     from scripts.pipeline_utils import ensure_required_dirs, get_project_root, init_logger
@@ -22,6 +23,7 @@ except ModuleNotFoundError:
     from export_daily_reports import export_daily_reports  # type: ignore
     from fetch_external_sources import fetch_external_sources  # type: ignore
     from fetch_jobspy import fetch_jobspy_jobs  # type: ignore
+    from fetch_uwo_connect import fetch_uwo_connect  # type: ignore
     from ingest_manual_links import ingest_manual_links  # type: ignore
     from normalize_jobs import normalize_jobs  # type: ignore
     from pipeline_utils import ensure_required_dirs, get_project_root, init_logger  # type: ignore
@@ -89,6 +91,7 @@ def run_pipeline(base_dir: str | Path | None = None, run_date: date | None = Non
         ("ingest_manual_links", ingest_manual_links),
         ("fetch_jobspy", fetch_jobspy_jobs),
         ("fetch_external_sources", fetch_external_sources),
+        ("fetch_uwo_connect", fetch_uwo_connect),
         ("normalize_jobs", normalize_jobs),
         ("dedupe_jobs", dedupe_jobs),
         ("score_jobs", score_jobs),
@@ -117,9 +120,10 @@ def run_pipeline(base_dir: str | Path | None = None, run_date: date | None = Non
     total_time = sum(stage_timings.values())
     jobspy_fetch_result = stage_results.get("fetch_jobspy", {})
     external_fetch_result = stage_results.get("fetch_external_sources", {})
+    uwo_fetch_result = stage_results.get("fetch_uwo_connect", {})
     fetched_source_summary: dict[str, int] = {}
     fetch_failure_summary: dict[str, int] = {}
-    for candidate in [jobspy_fetch_result, external_fetch_result]:
+    for candidate in [jobspy_fetch_result, external_fetch_result, uwo_fetch_result]:
         if not isinstance(candidate, dict):
             continue
         for source, count in candidate.get("source_summary", {}).items():
@@ -132,6 +136,7 @@ def run_pipeline(base_dir: str | Path | None = None, run_date: date | None = Non
         "date": run_date.isoformat(),
         "fetched_total": int(stage_results.get("fetch_jobspy", {}).get("count", 0)),
         "external_fetched_total": int(stage_results.get("fetch_external_sources", {}).get("count", 0)),
+        "uwo_fetched_total": int(stage_results.get("fetch_uwo_connect", {}).get("count", 0)),
         "deduped_total": int(stage_results.get("dedupe_jobs", {}).get("count", 0)),
         "fetched_source_summary": fetched_source_summary,
         "deduped_source_summary": deduped_source_summary,
@@ -161,7 +166,8 @@ def run_pipeline(base_dir: str | Path | None = None, run_date: date | None = Non
         "Summary counts: manual_links=%s, fetched=%s, normalized=%s, deduped=%s, scored=%s, exported=%s",
         stage_results.get("ingest_manual_links", {}).get("count", 0),
         int(stage_results.get("fetch_jobspy", {}).get("count", 0))
-        + int(stage_results.get("fetch_external_sources", {}).get("count", 0)),
+        + int(stage_results.get("fetch_external_sources", {}).get("count", 0))
+        + int(stage_results.get("fetch_uwo_connect", {}).get("count", 0)),
         stage_results.get("normalize_jobs", {}).get("count", 0),
         stage_results.get("dedupe_jobs", {}).get("count", 0),
         stage_results.get("score_jobs", {}).get("count", 0),

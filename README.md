@@ -1,15 +1,18 @@
 # Job Hunter V1: My Canada Intern/Co-op Workflow
 
 This is my personal daily pipeline for finding better intern/co-op roles in Canada.
+I built it for my own convenience so I can spend less time searching and more time applying.
 The goal is simple: spend less time doom-scrolling job boards, and more time applying to high-fit roles.
 
-It does six things:
+It does eight things:
 1. Fetches jobs from JobSpy
-2. Ingests manually pasted alert links
-3. Normalizes records into one schema
-4. Deduplicates jobs
-5. Scores and tiers jobs (A/B/C)
-6. Exports a daily Excel report
+2. Fetches jobs from external internship sources (GitHub internship repos + Internee)
+3. Fetches jobs from Western Connect (semi-automatic with Duo)
+4. Ingests manually pasted alert links
+5. Normalizes records into one schema
+6. Deduplicates jobs
+7. Scores and tiers jobs (A/B/C)
+8. Exports a daily Excel report
 
 ---
 
@@ -47,6 +50,32 @@ python scripts/update_feedback.py --status rejected --job-id <JOB_ID>
 ```
 
 Feedback fields are exported to Excel and summarized in the `feedback_summary` sheet.
+
+### UWO Connect (Duo) Semi-Automatic Fetch
+
+I added Western Connect scraping because it is one of the most useful sources for my own school-focused applications.
+Because Western uses Duo, the safest workflow is semi-automatic: I complete login/MFA in the browser, then the script continues.
+
+```bash
+python scripts/fetch_uwo_connect.py
+```
+
+Enable it in `config/sources.yaml`:
+
+```yaml
+uwo_connect:
+  enabled: true
+  dashboard_url: https://connect.uwo.ca/myAccount/dashboard.htm
+  headless: false
+  require_manual_confirm: true
+  # For non-interactive runs (no Enter prompt), use a timed wait:
+  # manual_wait_seconds: 120
+  # extract_details: true
+  # max_pages: 3
+```
+
+The script stores browser session data in `data/raw/uwo_connect_session` and writes records to
+`data/raw/alerts/uwo_connect_YYYYMMDD.jsonl`.
 
 ---
 

@@ -55,7 +55,8 @@ def _collect_input_files(root: Path, run_date: date) -> list[Path]:
     jobspy_path = root / "data" / "raw" / "jobspy" / f"jobspy_{stamp}.jsonl"
     alert_path = root / "data" / "raw" / "alerts" / f"alerts_manual_{stamp}.jsonl"
     external_path = root / "data" / "raw" / "alerts" / f"external_sources_{stamp}.jsonl"
-    files = [path for path in [jobspy_path, alert_path, external_path] if path.exists()]
+    uwo_path = root / "data" / "raw" / "alerts" / f"uwo_connect_{stamp}.jsonl"
+    files = [path for path in [jobspy_path, alert_path, external_path, uwo_path] if path.exists()]
     return files
 
 

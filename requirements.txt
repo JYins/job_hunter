@@ -4,3 +4,4 @@ python-jobspy
 pyyaml
 sentence-transformers
 torch
+playwright

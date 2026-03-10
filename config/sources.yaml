@@ -54,3 +54,13 @@ external_sources:
   internee:
     enabled: true
     url: https://internee.ca
+
+uwo_connect:
+  enabled: false
+  dashboard_url: https://connect.uwo.ca/myAccount/dashboard.htm
+  jobs_url: ""
+  headless: false
+  require_manual_confirm: true
+  manual_wait_seconds: 0
+  user_data_dir: data/raw/uwo_connect_session
+  max_pages: 3
