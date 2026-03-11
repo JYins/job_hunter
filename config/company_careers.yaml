@@ -1,0 +1,199 @@
+companies:
+  - company: Scotiabank
+    aliases:
+      - The Bank of Nova Scotia
+    career_url: https://jobs.scotiabank.com/
+    allowed_domains:
+      - jobs.scotiabank.com
+      - scotiabank.com
+
+  - company: TD Bank
+    aliases:
+      - TD Bank Group
+      - Toronto-Dominion Bank
+    career_url: https://jobs.td.com/en-CA/
+    allowed_domains:
+      - jobs.td.com
+      - td.com
+
+  - company: BMO
+    aliases:
+      - Bank of Montreal
+    career_url: https://jobs.bmo.com/ca/en
+    allowed_domains:
+      - jobs.bmo.com
+      - bmo.com
+
+  - company: RBC
+    aliases:
+      - Royal Bank of Canada
+    career_url: https://jobs.rbc.com/ca/en
+    allowed_domains:
+      - jobs.rbc.com
+      - rbc.com
+
+  - company: CIBC
+    aliases:
+      - Canadian Imperial Bank of Commerce
+    career_url: https://www.cibc.com/en/about-cibc/careers/students-and-graduates.html
+    allowed_domains:
+      - cibc.com
+      - myworkdayjobs.com
+      - workdayjobs.com
+
+  - company: Shopify
+    career_url: https://www.shopify.com/careers
+    allowed_domains:
+      - shopify.com
+
+  - company: SAP
+    career_url: https://jobs.sap.com/
+    allowed_domains:
+      - jobs.sap.com
+      - sap.com
+
+  - company: Capital One Canada
+    career_url: https://www.capitalonecareers.com/
+    allowed_domains:
+      - capitalonecareers.com
+      - capitalone.ca
+      - capitalone.com
+
+  - company: Stripe
+    career_url: https://stripe.com/jobs/search
+    allowed_domains:
+      - stripe.com
+
+  - company: DoorDash
+    career_url: https://jobs.ashbyhq.com/doordash
+    allowed_domains:
+      - doordash.com
+      - jobs.ashbyhq.com
+      - careersatdoordash.com
+
+  - company: PointClickCare
+    career_url: https://careers.pointclickcare.com/
+    allowed_domains:
+      - careers.pointclickcare.com
+      - pointclickcare.com
+
+  - company: Plusgrade
+    career_url: https://jobs.lever.co/plusgrade
+    allowed_domains:
+      - plusgrade.com
+      - jobs.lever.co
+      - jobs.ashbyhq.com
+
+  - company: AMD
+    career_url: https://careers.amd.com/careers-home/
+    allowed_domains:
+      - careers.amd.com
+      - amd.com
+
+  - company: Qualcomm
+    career_url: https://careers.qualcomm.com/
+    allowed_domains:
+      - careers.qualcomm.com
+      - qualcomm.com
+
+  - company: Waabi
+    career_url: https://waabi.ai/careers/
+    allowed_domains:
+      - waabi.ai
+
+  - company: Sanctuary AI
+    career_url: https://sanctuary.ai/careers/
+    allowed_domains:
+      - sanctuary.ai
+
+  - company: Huawei Canada
+    career_url: https://career.huawei.com/reccampportal/portal5/index.html
+    allowed_domains:
+      - career.huawei.com
+      - huawei.com
+
+  - company: Ouster
+    career_url: https://ouster.com/careers/
+    allowed_domains:
+      - ouster.com
+
+  - company: Trexo Robotics
+    career_url: https://jobs.ashbyhq.com/trexorobotics
+    allowed_domains:
+      - trexorobotics.com
+      - jobs.ashbyhq.com
+
+  - company: Promise Robotics
+    career_url: https://www.promiserobotics.com/careers
+    allowed_domains:
+      - promiserobotics.com
+
+  - company: GM Canada
+    aliases:
+      - General Motors
+      - General Motors of Canada
+    career_url: https://search-careers.gm.com/en/jobs/
+    allowed_domains:
+      - search-careers.gm.com
+      - gm.com
+
+  - company: Cohere
+    career_url: https://cohere.com/careers
+    allowed_domains:
+      - cohere.com
+
+  - company: Tenstorrent
+    career_url: https://job-boards.greenhouse.io/tenstorrent
+    allowed_domains:
+      - tenstorrent.com
+      - greenhouse.io
+      - boards.greenhouse.io
+
+  - company: Alexa Translations
+    career_url: https://alexatranslations.com/careers/
+    allowed_domains:
+      - alexatranslations.com
+
+  - company: Robinhood
+    career_url: https://careers.robinhood.com/
+    allowed_domains:
+      - careers.robinhood.com
+      - robinhood.com
+
+  - company: Reddit
+    career_url: https://www.redditinc.com/careers
+    allowed_domains:
+      - redditinc.com
+      - reddit.com
+
+  - company: Spotify
+    career_url: https://www.lifeatspotify.com/jobs
+    allowed_domains:
+      - lifeatspotify.com
+      - spotify.com
+
+  - company: Spellbook
+    career_url: https://www.spellbook.legal/careers
+    allowed_domains:
+      - spellbook.legal
+
+  - company: Vancity
+    career_url: https://www.vancity.com/careers/
+    allowed_domains:
+      - vancity.com
+
+  - company: Calian Group
+    aliases:
+      - Calian
+    career_url: https://www.calian.com/careers/
+    allowed_domains:
+      - calian.com
+
+  - company: National Research Council
+    aliases:
+      - NRC
+      - National Research Council Canada
+    career_url: https://nrc.canada.ca/en/corporate/careers
+    allowed_domains:
+      - nrc.canada.ca
+      - canada.ca

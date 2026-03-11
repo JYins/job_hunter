@@ -23,14 +23,23 @@ jobspy:
       enabled: true
       priority: 5
   search_terms:
-    - robotics intern canada
     - software engineer intern canada
-    - machine learning intern canada
+    - data engineer intern canada
+    - perception engineer intern canada
+    - robotics software engineer intern canada
+    - nlp engineer intern canada
+  auto_search_terms:
+    enabled: true
+    include_profile_tracks: true
+    include_profile_keywords: true
+    max_terms: 28
   locations:
     - Toronto, ON
     - Waterloo, ON
     - Vancouver, BC
     - Montreal, QC
+    - Ottawa, ON
+    - Markham, ON
     - Remote, Canada
   days_back: 7
   results_wanted: 100
@@ -54,6 +63,15 @@ external_sources:
   internee:
     enabled: true
     url: https://internee.ca
+  company_careers:
+    enabled: true
+    config_path: config/company_careers.yaml
+    include_tiers:
+      - tier_a
+      - tier_b
+      - tier_c
+      - tier_d
+    max_links_per_company: 25
 
 uwo_connect:
   enabled: false

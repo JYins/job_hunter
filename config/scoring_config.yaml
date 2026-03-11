@@ -1,17 +1,46 @@
 weights:
-  rule: 0.40
-  keyword: 0.20
-  semantic: 0.20
-  freshness: 0.10
+  rule: 0.33
+  nlp: 0.37
+  freshness: 0.15
   company: 0.10
+  source: 0.05
+
+nlp:
+  lexical_weight: 0.45
+  semantic_weight: 0.40
+  intent_weight: 0.15
 
 tiers:
-  a_min: 0.75
-  b_min: 0.55
+  a_min: 0.76
+  b_min: 0.57
 
 semantic:
   enabled: true
   model_name: sentence-transformers/all-MiniLM-L6-v2
+
+company:
+  unknown_score: 0.12
+  tier_scores:
+    tier_a: 1.00
+    tier_b: 0.82
+    tier_c: 0.64
+    tier_d: 0.48
+
+source:
+  unknown_score: 0.45
+  default_score: 0.55
+  exact_scores:
+    indeed: 0.54
+    linkedin: 0.56
+    glassdoor: 0.50
+    zip_recruiter: 0.48
+    google: 0.52
+    internee_ca: 0.68
+    uwo_connect: 0.76
+    manual_links: 0.90
+  prefix_scores:
+    github_repo: 0.62
+    company_careers: 1.00
 
 dedupe:
   title_similarity_threshold: 0.92

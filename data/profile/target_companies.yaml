@@ -1,14 +1,45 @@
 tier_a:
-  - Waabi
-  - Clearpath
-  - Avidbots
+  - Scotiabank
+  - The Bank of Nova Scotia
+  - TD Bank
+  - TD Bank Group
+  - Toronto-Dominion Bank
+  - BMO
+  - Bank of Montreal
+  - RBC
+  - Royal Bank of Canada
+  - CIBC
+  - Canadian Imperial Bank of Commerce
+  - Shopify
+  - SAP
+  - Capital One Canada
+  - Stripe
+  - DoorDash
+  - PointClickCare
+  - Plusgrade
+  - AMD
+  - Qualcomm
 
 tier_b:
-  - Geotab
-  - NVIDIA
-  - Magna
+  - Waabi
+  - Sanctuary AI
+  - Huawei Canada
+  - Ouster
+  - Trexo Robotics
+  - Promise Robotics
+  - GM Canada
 
 tier_c:
-  - Shopify
-  - Amazon
-  - AMD
+  - Cohere
+  - Tenstorrent
+  - Alexa Translations
+
+tier_d:
+  - Robinhood
+  - Reddit
+  - Spotify
+  - Spellbook
+  - Vancity
+  - Calian Group
+  - National Research Council
+  - NRC

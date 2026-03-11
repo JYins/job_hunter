@@ -5,6 +5,10 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
+bg/
+data/outputs/pipeline_runs.jsonl
+data/raw/uwo_connect_session/
+data/raw/alerts/uwo_connect_*probe_*.json
 data/processed/*.csv
 data/processed/*.xlsx
 data/raw/jobspy/*.jsonl

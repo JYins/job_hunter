@@ -1,20 +1,19 @@
 # Job Hunter V1: My Canada Intern/Co-op Workflow
 
-This is my personal daily pipeline for finding better intern/co-op roles in Canada.
-I built it for my own convenience so I can spend less time searching and more time applying.
-The goal is simple: spend less time doom-scrolling job boards, and more time applying to high-fit roles.
+I use this repo as my daily job hunting pipeline for Canada internships/co-ops.
+The goal is simple: spend less time scrolling and more time applying to high-fit roles.
 
-It does eight things:
-1. Fetches jobs from JobSpy
-2. Fetches jobs from external internship sources (GitHub internship repos + Internee)
-3. Fetches jobs from Western Connect (semi-automatic with Duo)
-4. Ingests manually pasted alert links
-5. Normalizes records into one schema
-6. Deduplicates jobs
-7. Scores and tiers jobs (A/B/C)
-8. Exports a daily Excel report
+## What It Does
 
----
+This pipeline runs 8 stages:
+1. Fetch jobs from JobSpy
+2. Fetch jobs from external sources (GitHub internship repos + Internee)
+3. Fetch jobs from Western Connect (semi-automatic with Duo)
+4. Ingest manual links I paste from alerts
+5. Normalize records into one schema
+6. Deduplicate jobs
+7. Score and tier jobs (A/B/C)
+8. Export a daily Excel report
 
 ## Quick Start
 
@@ -25,22 +24,20 @@ pip install -r requirements.txt
 python scripts/run_daily.py
 ```
 
----
+## My Daily Flow
 
-## What I Do Every Day
-
-1. Paste new job links from email alerts into `data/raw/alerts/links_today.txt` (one URL per line).
+1. Paste fresh links into `data/raw/alerts/links_today.txt` (one URL per line).
 2. Run:
 
 ```bash
 python scripts/run_daily.py
 ```
 
-3. Open `data/processed/today_top_jobs.xlsx` and prioritize Top 20 + Tier A roles.
+3. Open `data/processed/today_top_jobs.xlsx` and apply from Top 20 / Tier A first.
 
-### Feedback Tracking (Applied / Replied / Interview / Rejected)
+## Feedback Tracking
 
-Use this to track application progress directly in `jobs_master.csv`:
+I track application progress directly in `jobs_master.csv`:
 
 ```bash
 python scripts/update_feedback.py --status applied --job-id <JOB_ID> --notes "submitted on company portal"
@@ -49,12 +46,11 @@ python scripts/update_feedback.py --status interview --contains-title "Software 
 python scripts/update_feedback.py --status rejected --job-id <JOB_ID>
 ```
 
-Feedback fields are exported to Excel and summarized in the `feedback_summary` sheet.
+Statuses and notes are exported to the `feedback_summary` sheet.
 
-### UWO Connect (Duo) Semi-Automatic Fetch
+## UWO Connect (Duo) Fetch
 
-I added Western Connect scraping because it is one of the most useful sources for my own school-focused applications.
-Because Western uses Duo, the safest workflow is semi-automatic: I complete login/MFA in the browser, then the script continues.
+I use a semi-automatic flow for Western Connect: I complete login/MFA manually, then the script continues.
 
 ```bash
 python scripts/fetch_uwo_connect.py
@@ -68,93 +64,82 @@ uwo_connect:
   dashboard_url: https://connect.uwo.ca/myAccount/dashboard.htm
   headless: false
   require_manual_confirm: true
-  # For non-interactive runs (no Enter prompt), use a timed wait:
+  # optional:
   # manual_wait_seconds: 120
   # extract_details: true
   # max_pages: 3
 ```
 
-The script stores browser session data in `data/raw/uwo_connect_session` and writes records to
-`data/raw/alerts/uwo_connect_YYYYMMDD.jsonl`.
+Session data is saved in `data/raw/uwo_connect_session`.
 
----
-
-## Core Inputs to Configure
+## Core Config Files
 
 - `data/profile/user_profile.md`
 - `data/profile/skills_master.yaml`
 - `data/profile/target_companies.yaml`
 - `data/profile/search_config.yaml`
 - `config/sources.yaml`
+- `config/company_careers.yaml`
 - `config/scoring_config.yaml`
 
-These files define what "good fit" means for me.
+These files define my targeting strategy.
 
----
+## Search & Keyword Strategy
 
-## Scoring Model (with NLP)
+I organize search into 5 tracks:
+- SWE / Backend / Platform
+- Data / ML Evaluation
+- Perception / CV / Autonomous Driving
+- Robotics Software
+- AI Application / NLP / RAG
 
-Final score:
+`search_config.yaml` stores track-level fetch queries and keyword terms.
+`fetch_jobspy.py` auto-expands search terms from that profile config, so updating strategy in one place updates crawling behavior.
+
+## Scoring Model (NLP-Structured)
 
 ```text
-final_score = 0.40 * rule
-            + 0.20 * keyword
-            + 0.20 * semantic
-            + 0.10 * freshness
+final_score = 0.35 * rule
+            + 0.37 * nlp
+            + 0.15 * freshness
             + 0.10 * company
+            + 0.05 * source
+
+nlp = 0.45 * lexical
+    + 0.40 * semantic
+    + 0.15 * intent
 ```
 
-### 1) Rule Score (40%)
+### Rule Score (35%)
+- internship/co-op/new grad signal
+- Canada location signal
+- seniority penalty
 
-Hard filters and intent checks:
-- intern/co-op/new grad signal
-- Canada location signal (city matches or Remote Canada)
-- seniority exclusions (senior/staff/principal/etc.)
+### NLP Score (40%)
+- `lexical`: phrase/term matching over role + skill vocabulary
+- `semantic`: embedding similarity (`sentence-transformers/all-MiniLM-L6-v2`)
+- `intent`: alignment to one of my 5 target tracks
 
-### 2) Keyword Score (20%)
+The pipeline also writes interpretable columns:
+- `keyword_score`
+- `semantic_score`
+- `intent_score`
+- `nlp_score`
+- `matched_track`
+- `recommended_resume`
 
-Keyword overlap between the job text and:
-- `search_config.yaml` role keywords
-- `skills_master.yaml` skill inventory
+### Freshness Score (15%)
+Newer jobs get a higher score so I can apply earlier.
 
-More overlap means a higher score.
+### Company Score (10%)
+Boost from company tiers in `target_companies.yaml`.
 
-### 3) Semantic Score (NLP, 20%)
-
-Uses `sentence-transformers/all-MiniLM-L6-v2`.
-
-Pipeline:
-1. Build a profile text from `user_profile.md` + structured skills.
-2. Build a job text from `title + description`.
-3. Encode both into embeddings.
-4. Compute cosine similarity.
-5. Map similarity to a stable `0..1` score.
-
-Why this matters:
-- Keyword matching misses good roles with different wording.
-- Semantic matching catches jobs that are conceptually aligned, even when exact terms differ.
-
-Runtime behavior:
-- CPU by default
-- Auto-uses CUDA when available
-- If model load fails, semantic score gracefully falls back to `0` (pipeline still runs)
-
-### 4) Freshness Score (10%)
-
-Newer jobs get higher scores so I can apply earlier.
-
-### 5) Company Score (10%)
-
-Boosts roles from preferred companies in `target_companies.yaml`:
-- `tier_a`: strongest boost
-- `tier_b`: medium boost
-- `tier_c`: light boost
-
----
+### Source Score (5%)
+Official company career pages get the strongest trust boost, followed by manual links and higher-signal sources.
 
 ## Outputs
 
-- Canonical dataset: `data/processed/jobs_master.csv`
+- Canonical data: `data/processed/jobs_master.csv`
 - Daily report: `data/processed/today_top_jobs.xlsx`
 - Logs: `logs/run_YYYYMMDD.log`
 
@@ -163,8 +148,7 @@ Excel sheets:
 - `all_scored`
 - `source_summary`
 - `tier_summary`
-
----
+- `feedback_summary`
 
 ## Tests
 
@@ -172,15 +156,7 @@ Excel sheets:
 pytest -q
 ```
 
-Current coverage includes:
-- smoke test for end-to-end daily run
-- dedupe behavior
-- weighted scoring + tier thresholds
-- semantic runtime device fallback
-
----
-
 ## Note
 
-This is a prioritization workflow, not an auto-apply bot.
-The system filters and ranks jobs; I still do high-quality human applications.
+This is a prioritization system, not an auto-apply bot.
+I still review and submit applications manually.
